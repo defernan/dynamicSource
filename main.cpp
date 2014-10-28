@@ -26,7 +26,7 @@ struct Stocks{
 	int profit;
 };
 int recursiveSolution(map<pair<int,int>, int> ranges, int priceAtDay[], int daysLeft, int profit, int sharesLeft, int priceDrop, int numberOfDays, int maxProfit);
-int dynamicSolution(map<pair<int,int>, Stocks> &sharesAtDay, map<pair<int,int>, int> ranges, int priceAtDay[], int daysLeft, int profit, int sharesLeft, int priceDrop, int numberOfDays, int maxProfit);
+int dynamicSolution(map<pair<int,int>, int> &sharesAtDay, map<pair<int,int>, int> ranges, int priceAtDay[], int daysLeft, int profit, int sharesLeft, int priceDrop, int numberOfDays, int maxProfit);
 //DEZMON ENDED HERE**************************************************************************************************************************************
 int main(int argc,  char * argv[]) {
    
@@ -47,8 +47,8 @@ int main(int argc,  char * argv[]) {
 	int priceDrop=0;
 	int maxProfit=0;
     //DEZMON WORKED HERE ************************************************************************************************************************************
-	//the key is how many shares are left on that day, the value is the profit associated with it
-	map<pair<int, int>, Stocks> sharesLeft;
+	//the key is how many shares are left on that day, the value is the how many we sold(the choice we made) associated with it
+	map<pair<int, int>, int> sharesLeft;
 	vector<Stocks> stocksLeft;
 	cout<< "The max profit for the recursive solution is " <<recursiveSolution(ranges, priceAtDay, day, profit, shares, priceDrop, size,  maxProfit) << "\n";
 	//cout<< "The max profit for the dynamic solution is " <<dynamicSolution(sharesLeft, ranges, priceAtDay, day, profit, shares, priceDrop, size,  maxProfit) << "\n";
@@ -143,7 +143,8 @@ int dynamicSolution(map<pair<int,int>, Stocks> &sharesAtDay, map<pair<int,int>, 
 	//CHECK IF WE HAVE ALREADY FOUND THE PATH
 	map<pair<int,int>, Stocks>::iterator it=sharesAtDay.find(key);
 	if(it!=sharesAtDay.end()){
-		while(it->second.child!=NULL){
+		while(it!=sharesAtDay.end()){
+			sharesLeft-=it->second;
 			profit+=0;
 		}
 	}
