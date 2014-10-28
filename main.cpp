@@ -195,7 +195,7 @@ int dynamicSolution(map<pair<int,int>, int> &sharesAtDay, map<pair<int,int>, int
 					int calcProfit=dynamicSolution(sharesAtDay, ranges, priceAtDay, daysLeft-1, profit, sharesLeft, priceDrop, 3, maxProfit);
 					//NEED TO ADJUST TO POPULATE MAP DYNAMIC CORRECTLY
 					if(calcProfit >  maxProfit){
-						sharesAtDay[key]=range->second;
+						sharesAtDay[key]=range->first.second;
 						maxProfit=calcProfit;
 					}
 					cout<< "\nend of recursion profit is " << calcProfit << " && max profit is:" << maxProfit<< "\n\n\n\n";
