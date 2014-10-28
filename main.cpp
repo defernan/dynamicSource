@@ -42,7 +42,11 @@ int main(int argc,  char * argv[]) {
 	cout<< "PART1 RECURSIVE SOLUTION" << endl;
 	cout<< "The max profit for the recursive solution is " <<recursiveSolution(ranges, priceAtDay, day, profit, shares, priceDrop, size,  maxProfit) << "\n";
 	cout<< "PART2 DYNAMIC SOLUTION" << endl;
-	//cout<< "The max profit for the dynamic solution is " <<dynamicSolution(sharesLeft, ranges, priceAtDay, day, profit, shares, priceDrop, size,  maxProfit) << "\n";
+	cout<< "The max profit for the dynamic solution is " <<dynamicSolution(sharesLeft, ranges, priceAtDay, day, profit, shares, priceDrop, size,  maxProfit) << "\n";
+	cout<< "\n\nTHE DYNAMIC MAP IS.... \n";
+	for(map<pair<int, int>, int>::iterator it=sharesLeft.begin(); it!=sharesLeft.end();it++){
+		cout << "sharesLeft:" <<it->first.first << " day " << it->first.second << " and the amount sold for that key is " << it->second << endl;
+	}
 	//cout<< calcProfit(sharesLeft, ranges, priceAtDay, day, profit, shares) << "\n";
     //DEZMON ENDED HERE**************************************************************************************************************************************
    
@@ -151,6 +155,7 @@ int dynamicSolution(map<pair<int,int>, int> &sharesAtDay, map<pair<int,int>, int
 		if(profit >  maxProfit){
 			maxProfit=profit;
 		}
+		return profit;
 	}
 	//HAVE NOT ADJUSTED DYNAMIC PART FOR THIS AT ALL
 	//case where you run out of days and must sell all
