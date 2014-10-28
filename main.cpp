@@ -15,16 +15,6 @@ using namespace std;
 void calcTable(map<pair<int, int>, int> &table, map<pair<int,int>, int> ranges, int priceAtDay[], int daysLeft, int shares);
 //DEZMON WORKED HERE ************************************************************************************************************************************
 
-struct Stocks{
-	Stocks(){
-		child=NULL;
-		sharesSold=0;
-	}
-	Stocks* child;
-	int sharesSold;
-	int day;
-	int profit;
-};
 int recursiveSolution(map<pair<int,int>, int> ranges, int priceAtDay[], int daysLeft, int profit, int sharesLeft, int priceDrop, int numberOfDays, int maxProfit);
 int dynamicSolution(map<pair<int,int>, int> &sharesAtDay, map<pair<int,int>, int> ranges, int priceAtDay[], int daysLeft, int profit, int sharesLeft, int priceDrop, int numberOfDays, int maxProfit);
 //DEZMON ENDED HERE**************************************************************************************************************************************
@@ -49,15 +39,16 @@ int main(int argc,  char * argv[]) {
     //DEZMON WORKED HERE ************************************************************************************************************************************
 	//the key is how many shares are left on that day, the value is the how many we sold(the choice we made) associated with it
 	map<pair<int, int>, int> sharesLeft;
-	vector<Stocks> stocksLeft;
+	cout<< "PART1 RECURSIVE SOLUTION" << endl;
 	cout<< "The max profit for the recursive solution is " <<recursiveSolution(ranges, priceAtDay, day, profit, shares, priceDrop, size,  maxProfit) << "\n";
+	cout<< "PART2 DYNAMIC SOLUTION" << endl;
 	//cout<< "The max profit for the dynamic solution is " <<dynamicSolution(sharesLeft, ranges, priceAtDay, day, profit, shares, priceDrop, size,  maxProfit) << "\n";
 	//cout<< calcProfit(sharesLeft, ranges, priceAtDay, day, profit, shares) << "\n";
     //DEZMON ENDED HERE**************************************************************************************************************************************
    
     
     //Think about sorting ranges....
-    cout << "The table shows that..." << endl;
+    //cout << "The table shows that..." << endl;
    /* calcTable(table, ranges, priceAtDay, day, shares);
     for (auto it = table.rbegin(); it != table.rend(); it++) {
         cout << it->first.first << " shares were sold on day " << it->first.second << " for a profit of " << it->second << endl;
@@ -133,21 +124,35 @@ int recursiveSolution(map<pair<int,int>, int> ranges, int priceAtDay[], int days
 	return maxProfit;
 }
 ///////DYNAMIC SOLUTION////////////
-int dynamicSolution(map<pair<int,int>, Stocks> &sharesAtDay, map<pair<int,int>, int> ranges, int priceAtDay[], int daysLeft, int profit, int sharesLeft, int priceDrop, int numberOfDays, int maxProfit){
+int dynamicSolution(map<pair<int,int>, int> &sharesAtDay, map<pair<int,int>, int> ranges, int priceAtDay[], int daysLeft, int profit, int sharesLeft, int priceDrop, int numberOfDays, int maxProfit){
 	if(sharesLeft==0){
 		return profit;
 	}
 	//CREATE PAIR FOR DYNAMIC PROGRAMMING
 	pair<int, int> key(sharesLeft,daysLeft);
-	Stocks path;
 	//CHECK IF WE HAVE ALREADY FOUND THE PATH
-	map<pair<int,int>, Stocks>::iterator it=sharesAtDay.find(key);
+	map<pair<int,int>, int>::iterator it=sharesAtDay.find(key);
+	//IF WE FIND A VALUE IN OUR MAP, JUST FOLLOW IT BY DECREMENTING THE SHARES IN THE MAP, WILL TAKE US TO THE NEXT DECISION WE MADE
 	if(it!=sharesAtDay.end()){
 		while(it!=sharesAtDay.end()){
 			sharesLeft-=it->second;
-			profit+=0;
+			for(map<pair<int,int>,int>::iterator range=ranges.begin(); range!=ranges.end(); range++){
+				if(sharesLeft >= range->first.first && sharesLeft <=range->first.second){
+					//for testing
+					int temp1=profit;
+					priceDrop+=range->second;
+					profit+= it->second*( (priceAtDay[ it->first.second]) - priceDrop );
+					cout<< "IM IN DYNAMIC PART...Profit is: " << profit << "= " << temp1 << " + " << it->second*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop ) << "\nday is" << it->first.second << "\npriceDrop is: " <<priceDrop<< "\ni had shares= : "<< it->first.first << "\nI sold " << it->second << " shares\n"  << endl;
+				}
+			}
+			pair<int, int> key(sharesLeft,daysLeft--);
+			it=sharesAtDay.find(key);
+		}
+		if(profit >  maxProfit){
+			maxProfit=profit;
 		}
 	}
+	//HAVE NOT ADJUSTED DYNAMIC PART FOR THIS AT ALL
 	//case where you run out of days and must sell all
 	if(daysLeft == 0){
 		for(map<pair<int,int>,int>::iterator range=ranges.begin(); range!=ranges.end(); range++){
@@ -179,10 +184,13 @@ int dynamicSolution(map<pair<int,int>, Stocks> &sharesAtDay, map<pair<int,int>, 
 					priceDrop+=range->second;
 					profit+= (range->first.second)*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop );
 					cout<< "Profit is: " << profit << " =" << temp1 <<" " << " + " << (range->first.second)*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop )<< "\nday is" << daysLeft << "\npriceDrop is: " <<priceDrop<< "\nsharesLeft= : "<< sharesLeft << "\nI sold " << range->first.second << " shares\n"  << endl;
-					
+					//MAKE PAIR TO POPULATE DYNAMIC MAP
+					pair<int,int> key(sharesLeft,daysLeft);
 					//recursive call
 					int calcProfit=dynamicSolution(sharesAtDay, ranges, priceAtDay, daysLeft-1, profit, sharesLeft, priceDrop, 3, maxProfit);
+					//NEED TO ADJUST TO POPULATE MAP DYNAMIC CORRECTLY
 					if(calcProfit >  maxProfit){
+						sharesAtDay[key]=range->second;
 						maxProfit=calcProfit;
 					}
 					cout<< "\nend of recursion profit is " << calcProfit << " && max profit is:" << maxProfit<< "\n\n\n\n";
@@ -192,6 +200,7 @@ int dynamicSolution(map<pair<int,int>, Stocks> &sharesAtDay, map<pair<int,int>, 
 					priceDrop-=range->second;
 
 				}else{
+					//HAVE NOT ADJUSTED FOR DYNAMIC MAP
 					//just for testing/printing
 					int temp=sharesLeft;
 					int temp1= profit;
@@ -209,14 +218,6 @@ int dynamicSolution(map<pair<int,int>, Stocks> &sharesAtDay, map<pair<int,int>, 
 		}
 	}
 	return maxProfit;
-}
-int calcProfit(Stocks* a, int profit, int price, map<pair<int,int>, int> ranges, int priceAtDat[]){
-	/*if(a==NULL){
-		return profit;
-	}
-	profit+=ranges,find
-	return calcProfit(a->child, profit, price);*/
-	return 0;
 }
  //DEZMON ENDED HERE**************************************************************************************************************************************
 void calcTable(map<pair<int, int>, int> &table, map<pair<int,int>, int> ranges, int priceAtDay[], int daysLeft, int shares){
