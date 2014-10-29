@@ -127,7 +127,7 @@ int dynamicSolution(map<pair<int,int>, int> &sharesAtDay, map<pair<int,int>, int
 	pair<int, int> key(sharesLeft,daysLeft);
 	//CHECK IF WE HAVE ALREADY FOUND THE PATH
 	map<pair<int,int>, int>::iterator it=sharesAtDay.find(key);
-	//IF WE FIND A VALUE IN OUR MAP, JUST FOLLOW IT BY DECREMENTING THE SHARES IN THE MAP, WILL TAKE US TO THE NEXT DECISION WE MADE
+	//IF WE FIND A VALUE IN OUR MAP, JUST FOLLOW IT BY DECREMENTING THE SHARES IN THE MAP, WILL TAKE US TO THE NEXT DECISION WE MAKE
 	if(it!=sharesAtDay.end()){
 		while(it!=sharesAtDay.end()){
 			sharesLeft-=it->second;
@@ -164,7 +164,8 @@ int dynamicSolution(map<pair<int,int>, int> &sharesAtDay, map<pair<int,int>, int
 			}
 		}
 		return profit;
-	}else{
+	}//If path not yet discovered, recurse
+	else{
 		
 		for(map<pair<int,int>,int>::iterator range=ranges.begin(); range!=ranges.end(); range++){
 			//check if there enough shares left to sell at this price range
@@ -179,7 +180,6 @@ int dynamicSolution(map<pair<int,int>, int> &sharesAtDay, map<pair<int,int>, int
 					sharesLeft-=range->first.second;
 					//recursive call
 					int calcProfit=dynamicSolution(sharesAtDay, ranges, priceAtDay, daysLeft-1, profit, sharesLeft, priceDrop, numberOfDays, maxProfit);
-					//NEED TO ADJUST TO POPULATE MAP DYNAMIC CORRECTLY
 					if(calcProfit >  maxProfit){
 						sharesAtDay[key]=range->first.second;
 						maxProfit=calcProfit;
