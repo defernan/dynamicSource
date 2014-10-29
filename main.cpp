@@ -206,17 +206,19 @@ int dynamicSolution(map<pair<int,int>, int> &sharesAtDay, map<pair<int,int>, int
 					priceDrop-=range->second;
 
 				}else{
-					//HAVE NOT ADJUSTED FOR DYNAMIC MAP
 					//just for testing/printing
 					int temp=sharesLeft;
 					int temp1= profit;
-
+				
 					priceDrop+=range->second;
 					profit+= sharesLeft*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop );
-					sharesLeft-=sharesLeft;
+					
 					cout<< "Profit is: " << profit << "= " << temp1 << " + " << temp*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop ) << "\nday is" << daysLeft << "\npriceDrop is: " <<priceDrop<< "\nsharesLeft= : "<< sharesLeft << "\nI sold " << temp << " shares\n"  << endl;
+					pair<int,int> key(sharesLeft,daysLeft);
+					sharesLeft-=sharesLeft;
 					int calcProfit=dynamicSolution(sharesAtDay, ranges, priceAtDay, daysLeft-1, profit, sharesLeft, priceDrop, numberOfDays, maxProfit);
 					if(calcProfit >  maxProfit){
+						sharesAtDay[key]=range->first.second;
 						maxProfit=calcProfit;
 					}
 				}
