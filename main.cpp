@@ -152,7 +152,6 @@ int dynamicSolution(map<pair<int,int>, int> &sharesAtDay, map<pair<int,int>, int
 		}
 		return profit;
 	}
-	//HAVE NOT ADJUSTED DYNAMIC PART FOR THIS AT ALL
 	//case where you run out of days and must sell all
 	if(daysLeft == 0){
 		for(map<pair<int,int>,int>::iterator range=ranges.begin(); range!=ranges.end(); range++){
