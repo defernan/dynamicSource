@@ -133,18 +133,12 @@ int dynamicSolution(map<pair<int,int>, int> &sharesAtDay, map<pair<int,int>, int
 			sharesLeft-=it->second;
 			for(map<pair<int,int>,int>::iterator range=ranges.begin(); range!=ranges.end(); range++){
 				if(it->second >= range->first.first && sharesLeft <=range->first.second){
-					//for testing
-					int temp1=profit;
 					priceDrop+=range->second;
-					//cout << "DAYS LEFT " << daysLeft << "AND PRICE AT THIS DAY IS" << priceAtDay[ numberOfDays - 1 - daysLeft] << "&& shares left after sale are " <<sharesLeft << endl;
 					profit+= it->second*( (priceAtDay[ numberOfDays - 1 - daysLeft]) - priceDrop );
-					//cout<< "IM IN DYNAMIC PART...Profit is: " << profit << "= " << temp1 << " + " << it->second*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop ) << "\nday is" << daysLeft << "\npriceDrop is: " <<priceDrop<< "\ni had shares= : "<< it->first.first << "\nI sold " << it->second << " shares\n"  << endl;
 					break;
 				}
 			}
 			daysLeft--;
-			//cout<< "shares left are " << sharesLeft << " and days left are " << daysLeft;
-			
 			pair<int, int> key(sharesLeft,daysLeft);
 			it=sharesAtDay.find(key);
 		}
@@ -157,19 +151,13 @@ int dynamicSolution(map<pair<int,int>, int> &sharesAtDay, map<pair<int,int>, int
 	if(daysLeft == 0){
 		for(map<pair<int,int>,int>::iterator range=ranges.begin(); range!=ranges.end(); range++){
 			if(sharesLeft >= range->first.first && sharesLeft <=range->first.second){
-				//for testing
-				int temp1=profit;
-				int temp=sharesLeft;
 				priceDrop+=range->second;
 				profit+= sharesLeft*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop );
 				//MAKE PAIR TO POPULATE DYNAMIC MAP
 				pair<int,int> key(sharesLeft,daysLeft);
-				
-				//cout<< "Profit is: " << profit << "= " << temp1 << " + " << temp*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop ) << "\nday is" << daysLeft << "\npriceDrop is: " <<priceDrop<< "\nsharesLeft= : "<< sharesLeft << "\nI sold " << temp << " shares\n"  << endl;
 				sharesLeft-=sharesLeft;
 				int calcProfit=dynamicSolution(sharesAtDay,ranges, priceAtDay, daysLeft-1, profit, sharesLeft, priceDrop, numberOfDays, maxProfit);
 				if(calcProfit >  maxProfit){
-					//cout<< "IM POPULTATING MAP sharesLeft: " << key.first << " day: " << key.second << "
 					sharesAtDay[key]=key.first;
 					maxProfit=calcProfit;
 				}
@@ -183,13 +171,9 @@ int dynamicSolution(map<pair<int,int>, int> &sharesAtDay, map<pair<int,int>, int
 			if(sharesLeft >= range->first.first){
 				//sell max amount at range, otherwise sell everything we have left
 				if(sharesLeft >= range->first.second){
-					//for printing
-					int temp1=profit;
 					//decrement what were  selling and incorporate price drop
-					
 					priceDrop+=range->second;
 					profit+= (range->first.second)*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop );
-					//cout<< "Profit is: " << profit << " =" << temp1 <<" " << " + " << (range->first.second)*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop )<< "\nday is" << daysLeft << "\npriceDrop is: " <<priceDrop<< "\nsharesLeft= : "<< sharesLeft << "\nI sold " << range->first.second << " shares\n"  << endl;
 					//MAKE PAIR TO POPULATE DYNAMIC MAP
 					pair<int,int> key(sharesLeft,daysLeft);
 					sharesLeft-=range->first.second;
@@ -200,21 +184,14 @@ int dynamicSolution(map<pair<int,int>, int> &sharesAtDay, map<pair<int,int>, int
 						sharesAtDay[key]=range->first.second;
 						maxProfit=calcProfit;
 					}
-					//cout<< "\nend of recursion profit is " << calcProfit << " && max profit is:" << maxProfit<< "\n\n\n\n";
 					//restore profit, Stocks, and price drop
 					profit-=(range->first.second)*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop );
 					sharesLeft+=range->first.second;
 					priceDrop-=range->second;
 
 				}else{
-					//just for testing/printing
-					int temp=sharesLeft;
-					int temp1= profit;
-				
 					priceDrop+=range->second;
 					profit+= sharesLeft*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop );
-					
-					//cout<< "Profit is: " << profit << "= " << temp1 << " + " << temp*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop ) << "\nday is" << daysLeft << "\npriceDrop is: " <<priceDrop<< "\nsharesLeft= : "<< sharesLeft << "\nI sold " << temp << " shares\n"  << endl;
 					pair<int,int> key(sharesLeft,daysLeft);
 					sharesLeft-=sharesLeft;
 					int calcProfit=dynamicSolution(sharesAtDay, ranges, priceAtDay, daysLeft-1, profit, sharesLeft, priceDrop, numberOfDays, maxProfit);
