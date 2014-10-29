@@ -8,19 +8,14 @@
 
 #include <iostream>
 #include <map>
-#include <vector>
 
 using namespace std;
 
-void calcTable(map<pair<int, int>, int> &table, map<pair<int,int>, int> ranges, int priceAtDay[], int daysLeft, int shares);
-//DEZMON WORKED HERE ************************************************************************************************************************************
 
 int recursiveSolution(map<pair<int,int>, int> ranges, int priceAtDay[], int daysLeft, int profit, int sharesLeft, int priceDrop, int numberOfDays, int maxProfit);
 int dynamicSolution(map<pair<int,int>, int> &sharesAtDay, map<pair<int,int>, int> ranges, int priceAtDay[], int daysLeft, int profit, int sharesLeft, int priceDrop, int numberOfDays, int maxProfit);
-//DEZMON ENDED HERE**************************************************************************************************************************************
+
 int main(int argc,  char * argv[]) {
-   
-    
     //Set up tests;
 	const int NUMBER_OF_DAYS=5;
     int shares = 100;
@@ -36,10 +31,8 @@ int main(int argc,  char * argv[]) {
 	//made this -1 because on day one, there are priceAtDay.size-1 days left ie 3 days, day 2 is really the first day
     int day = NUMBER_OF_DAYS-1;
     int profit = 0;
-    int price =0;
 	int priceDrop=0;
 	int maxProfit=0;
-    //DEZMON WORKED HERE ************************************************************************************************************************************
 	//the key is how many shares are left on that day, the value is the how many we sold(the choice we made) associated with it
 	map<pair<int, int>, int> sharesLeft;
 	cout<< "PART1 RECURSIVE SOLUTION" << endl;
@@ -52,20 +45,10 @@ int main(int argc,  char * argv[]) {
 	for(map<pair<int, int>, int>::iterator it=sharesLeft.begin(); it!=sharesLeft.end();it++){
 		cout << "sharesLeft:" <<it->first.first << " day " << it->first.second << " and the amount sold for that key is " << it->second << endl;
 	}
-	//cout<< calcProfit(sharesLeft, ranges, priceAtDay, day, profit, shares) << "\n";
-    //DEZMON ENDED HERE**************************************************************************************************************************************
-   
-    
-    //Think about sorting ranges....
-    //cout << "The table shows that..." << endl;
-   /* calcTable(table, ranges, priceAtDay, day, shares);
-    for (auto it = table.rbegin(); it != table.rend(); it++) {
-        cout << it->first.first << " shares were sold on day " << it->first.second << " for a profit of " << it->second << endl;
-    }*/
     system("pause");
 	return 0;
 }
-//DEZMON WORKED HERE ************************************************************************************************************************************
+
 ////////RECURSIVE SOLUTION///////////////
 int recursiveSolution(map<pair<int,int>, int> ranges, int priceAtDay[], int daysLeft, int profit, int sharesLeft, int priceDrop, int numberOfDays, int maxProfit){
 	if(sharesLeft==0){
@@ -243,39 +226,4 @@ int dynamicSolution(map<pair<int,int>, int> &sharesAtDay, map<pair<int,int>, int
 	}
 	return maxProfit;
 }
- //DEZMON ENDED HERE**************************************************************************************************************************************
-void calcTable(map<pair<int, int>, int> &table, map<pair<int,int>, int> ranges, int priceAtDay[], int daysLeft, int shares){
-    
-    /*
-    //We will iterate through the different ranges to calculate the profit at each sale;
-    for (auto it = ranges.rbegin(); it != ranges.rend(); it++) {
-        
-        //First, we will make sure that the values can fit within the range.
-        
-        if (shares >= it->first.first) {
-            
-            int sharesToSell;
-            
-            // We need to make sure that if we sell the maximum amount of shares at the range specified
-            if (shares - it->first.first >= 0) {
-                sharesToSell = it->first.first;
-            }
-            else{
-                sharesToSell = shares;
-            }
-            //If the (shares sold, day sold) pair already exists in the table, don't do anything.
-            if(table.find(pair<int,int>(sharesToSell, daysLeft)) == table.end()){
-                cout << "Not in table" << endl;
-                //We will need to either make the "3" variable global or change how days are handled.
-                table[pair<int,int>(sharesToSell, daysLeft)] = sharesToSell*priceAtDay[3-daysLeft];
-            }
-            //Only call recursively if our base case has not been hit.
-            if (daysLeft != 1 || shares-sharesToSell != 0) {
-                calcTable(table, ranges, priceAtDay, daysLeft--, shares-sharesToSell);
-            }
-            
-            
-        }
-    }*/
-}
-
+ 
