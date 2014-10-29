@@ -14,7 +14,7 @@ using namespace std;
 
 int recursiveSolution(map<pair<int,int>, int> ranges, int priceAtDay[], int daysLeft, int profit, int sharesLeft, int priceDrop, int numberOfDays, int maxProfit);
 int dynamicSolution(map<pair<int,int>, int> &sharesAtDay, map<pair<int,int>, int> ranges, int priceAtDay[], int daysLeft, int profit, int sharesLeft, int priceDrop, int numberOfDays, int maxProfit);
-
+void traceBack(map<pair<int,int>, int> &sharesAtDay, int shares, int dayOne, int numDays);
 int main(int argc,  char * argv[]) {
     //Set up tests;
 	const int NUMBER_OF_DAYS=5;
@@ -35,16 +35,18 @@ int main(int argc,  char * argv[]) {
 	int maxProfit=0;
 	//the key is how many shares are left on that day, the value is the how many we sold(the choice we made) associated with it
 	map<pair<int, int>, int> sharesLeft;
-	cout<< "PART1 RECURSIVE SOLUTION" << endl;
+	//cout<< "PART1 RECURSIVE SOLUTION" << endl;
 	int recursiveSol=recursiveSolution(ranges, priceAtDay, day, profit, shares, priceDrop, size,  maxProfit);
+	int dynamicSol=dynamicSolution(sharesLeft, ranges, priceAtDay, day, profit, shares, priceDrop, size,  maxProfit);
+	//cout<< "\n\n\n\nPART2 DYNAMIC SOLUTION" << endl;
+	//cout<< "The max profit for the recursive solution is " << recursiveSol<< "\n";
+	cout<< "The max profit for the dynamic solution is " << dynamicSol << "\n";
 	
-	cout<< "\n\n\n\nPART2 DYNAMIC SOLUTION" << endl;
-	cout<< "The max profit for the dynamic solution is " <<dynamicSolution(sharesLeft, ranges, priceAtDay, day, profit, shares, priceDrop, size,  maxProfit) << "\n";
-	cout<< "The max profit for the recursive solution is " << recursiveSol<< "\n";
-	cout<< "\n\nTHE DYNAMIC MAP IS.... \n";
+	/*cout<< "\n\nTHE DYNAMIC MAP IS.... \n";
 	for(map<pair<int, int>, int>::iterator it=sharesLeft.begin(); it!=sharesLeft.end();it++){
 		cout << "sharesLeft:" <<it->first.first << " day " << it->first.second << " and the amount sold for that key is " << it->second << endl;
-	}
+	}*/
+	traceBack(sharesLeft, shares, day, size);
     system("pause");
 	return 0;
 }
@@ -64,7 +66,7 @@ int recursiveSolution(map<pair<int,int>, int> ranges, int priceAtDay[], int days
 				priceDrop+=range->second;
 				profit+= sharesLeft*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop );
 				sharesLeft-=sharesLeft;
-				cout<< "Profit is: " << profit << "= " << temp1 << " + " << temp*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop ) << "\nday is" << daysLeft << "\npriceDrop is: " <<priceDrop<< "\nsharesLeft= : "<< sharesLeft << "\nI sold " << temp << " shares\n"  << endl;
+				//cout<< "Profit is: " << profit << "= " << temp1 << " + " << temp*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop ) << "\nday is" << daysLeft << "\npriceDrop is: " <<priceDrop<< "\nsharesLeft= : "<< sharesLeft << "\nI sold " << temp << " shares\n"  << endl;
 				int calcProfit=recursiveSolution(ranges, priceAtDay, daysLeft-1, profit, sharesLeft, priceDrop, numberOfDays, maxProfit);
 				if(calcProfit >  maxProfit){
 					maxProfit=calcProfit;
@@ -84,14 +86,14 @@ int recursiveSolution(map<pair<int,int>, int> ranges, int priceAtDay[], int days
 					
 					priceDrop+=range->second;
 					profit+= (range->first.second)*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop );
-					cout<< "Profit is: " << profit << " =" << temp1 <<" " << " + " << (range->first.second)*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop )<< "\nday is" << daysLeft << "\npriceDrop is: " <<priceDrop<< "\nsharesLeft= : "<< sharesLeft << "\nI sold " << range->first.second << " shares\n"  << endl;
+					//cout<< "Profit is: " << profit << " =" << temp1 <<" " << " + " << (range->first.second)*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop )<< "\nday is" << daysLeft << "\npriceDrop is: " <<priceDrop<< "\nsharesLeft= : "<< sharesLeft << "\nI sold " << range->first.second << " shares\n"  << endl;
 					sharesLeft-=range->first.second;
 					//recursive call
 					int calcProfit=recursiveSolution(ranges, priceAtDay, daysLeft-1, profit, sharesLeft, priceDrop, numberOfDays, maxProfit);
 					if(calcProfit >  maxProfit){
 						maxProfit=calcProfit;
 					}
-					cout<< "\nend of recursion profit is " << calcProfit << " && max profit is:" << maxProfit<< "\n\n\n\n";
+					//cout<< "\nend of recursion profit is " << calcProfit << " && max profit is:" << maxProfit<< "\n\n\n\n";
 					//restore profit, Stocks, and price drop
 					profit-=(range->first.second)*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop );
 					sharesLeft+=range->first.second;
@@ -105,7 +107,7 @@ int recursiveSolution(map<pair<int,int>, int> ranges, int priceAtDay[], int days
 					priceDrop+=range->second;
 					profit+= sharesLeft*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop );
 					sharesLeft-=sharesLeft;
-					cout<< "Profit is: " << profit << "= " << temp1 << " + " << temp*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop ) << "\nday is" << daysLeft << "\npriceDrop is: " <<priceDrop<< "\nsharesLeft= : "<< sharesLeft << "\nI sold " << temp << " shares\n"  << endl;
+					//cout<< "Profit is: " << profit << "= " << temp1 << " + " << temp*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop ) << "\nday is" << daysLeft << "\npriceDrop is: " <<priceDrop<< "\nsharesLeft= : "<< sharesLeft << "\nI sold " << temp << " shares\n"  << endl;
 					int calcProfit=recursiveSolution(ranges, priceAtDay, daysLeft-1, profit, sharesLeft, priceDrop, numberOfDays, maxProfit);
 					if(calcProfit >  maxProfit){
 						maxProfit=calcProfit;
@@ -134,19 +136,18 @@ int dynamicSolution(map<pair<int,int>, int> &sharesAtDay, map<pair<int,int>, int
 					//for testing
 					int temp1=profit;
 					priceDrop+=range->second;
-					cout << "DAYS LEFT " << daysLeft << "AND PRICE AT THIS DAY IS" << priceAtDay[ numberOfDays - 1 - daysLeft] << "&& shares left after sale are " <<sharesLeft << endl;
+					//cout << "DAYS LEFT " << daysLeft << "AND PRICE AT THIS DAY IS" << priceAtDay[ numberOfDays - 1 - daysLeft] << "&& shares left after sale are " <<sharesLeft << endl;
 					profit+= it->second*( (priceAtDay[ numberOfDays - 1 - daysLeft]) - priceDrop );
-					cout<< "IM IN DYNAMIC PART...Profit is: " << profit << "= " << temp1 << " + " << it->second*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop ) << "\nday is" << daysLeft << "\npriceDrop is: " <<priceDrop<< "\ni had shares= : "<< it->first.first << "\nI sold " << it->second << " shares\n"  << endl;
+					//cout<< "IM IN DYNAMIC PART...Profit is: " << profit << "= " << temp1 << " + " << it->second*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop ) << "\nday is" << daysLeft << "\npriceDrop is: " <<priceDrop<< "\ni had shares= : "<< it->first.first << "\nI sold " << it->second << " shares\n"  << endl;
 					break;
 				}
 			}
 			daysLeft--;
-			cout<< "shares left are " << sharesLeft << " and days left are " << daysLeft;
+			//cout<< "shares left are " << sharesLeft << " and days left are " << daysLeft;
 			
 			pair<int, int> key(sharesLeft,daysLeft);
 			it=sharesAtDay.find(key);
 		}
-		cout << "IM NOT REPEATING";
 		if(profit >  maxProfit){
 			maxProfit=profit;
 		}
@@ -164,7 +165,7 @@ int dynamicSolution(map<pair<int,int>, int> &sharesAtDay, map<pair<int,int>, int
 				//MAKE PAIR TO POPULATE DYNAMIC MAP
 				pair<int,int> key(sharesLeft,daysLeft);
 				
-				cout<< "Profit is: " << profit << "= " << temp1 << " + " << temp*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop ) << "\nday is" << daysLeft << "\npriceDrop is: " <<priceDrop<< "\nsharesLeft= : "<< sharesLeft << "\nI sold " << temp << " shares\n"  << endl;
+				//cout<< "Profit is: " << profit << "= " << temp1 << " + " << temp*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop ) << "\nday is" << daysLeft << "\npriceDrop is: " <<priceDrop<< "\nsharesLeft= : "<< sharesLeft << "\nI sold " << temp << " shares\n"  << endl;
 				sharesLeft-=sharesLeft;
 				int calcProfit=dynamicSolution(sharesAtDay,ranges, priceAtDay, daysLeft-1, profit, sharesLeft, priceDrop, numberOfDays, maxProfit);
 				if(calcProfit >  maxProfit){
@@ -188,7 +189,7 @@ int dynamicSolution(map<pair<int,int>, int> &sharesAtDay, map<pair<int,int>, int
 					
 					priceDrop+=range->second;
 					profit+= (range->first.second)*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop );
-					cout<< "Profit is: " << profit << " =" << temp1 <<" " << " + " << (range->first.second)*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop )<< "\nday is" << daysLeft << "\npriceDrop is: " <<priceDrop<< "\nsharesLeft= : "<< sharesLeft << "\nI sold " << range->first.second << " shares\n"  << endl;
+					//cout<< "Profit is: " << profit << " =" << temp1 <<" " << " + " << (range->first.second)*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop )<< "\nday is" << daysLeft << "\npriceDrop is: " <<priceDrop<< "\nsharesLeft= : "<< sharesLeft << "\nI sold " << range->first.second << " shares\n"  << endl;
 					//MAKE PAIR TO POPULATE DYNAMIC MAP
 					pair<int,int> key(sharesLeft,daysLeft);
 					sharesLeft-=range->first.second;
@@ -199,7 +200,7 @@ int dynamicSolution(map<pair<int,int>, int> &sharesAtDay, map<pair<int,int>, int
 						sharesAtDay[key]=range->first.second;
 						maxProfit=calcProfit;
 					}
-					cout<< "\nend of recursion profit is " << calcProfit << " && max profit is:" << maxProfit<< "\n\n\n\n";
+					//cout<< "\nend of recursion profit is " << calcProfit << " && max profit is:" << maxProfit<< "\n\n\n\n";
 					//restore profit, Stocks, and price drop
 					profit-=(range->first.second)*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop );
 					sharesLeft+=range->first.second;
@@ -213,7 +214,7 @@ int dynamicSolution(map<pair<int,int>, int> &sharesAtDay, map<pair<int,int>, int
 					priceDrop+=range->second;
 					profit+= sharesLeft*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop );
 					
-					cout<< "Profit is: " << profit << "= " << temp1 << " + " << temp*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop ) << "\nday is" << daysLeft << "\npriceDrop is: " <<priceDrop<< "\nsharesLeft= : "<< sharesLeft << "\nI sold " << temp << " shares\n"  << endl;
+					//cout<< "Profit is: " << profit << "= " << temp1 << " + " << temp*( (priceAtDay[ numberOfDays-1-daysLeft]) - priceDrop ) << "\nday is" << daysLeft << "\npriceDrop is: " <<priceDrop<< "\nsharesLeft= : "<< sharesLeft << "\nI sold " << temp << " shares\n"  << endl;
 					pair<int,int> key(sharesLeft,daysLeft);
 					sharesLeft-=sharesLeft;
 					int calcProfit=dynamicSolution(sharesAtDay, ranges, priceAtDay, daysLeft-1, profit, sharesLeft, priceDrop, numberOfDays, maxProfit);
@@ -227,4 +228,16 @@ int dynamicSolution(map<pair<int,int>, int> &sharesAtDay, map<pair<int,int>, int
 	}
 	return maxProfit;
 }
- 
+void traceBack(map<pair<int,int>, int> &sharesAtDay, int shares, int dayOne, int numDays){
+	pair<int,int> key(shares,dayOne);
+	map<pair<int,int>, int>::iterator it=sharesAtDay.find(key);
+	cout<< "The optimal path is... " << endl;
+	while(it!=sharesAtDay.end()){
+		
+		cout << "Sell " << it->second << " shares on day " << numDays-it->first.second << endl;
+		dayOne=dayOne-1;
+		shares=shares-it->second;
+		pair<int,int> key(shares,dayOne);
+		it=sharesAtDay.find(key);
+	}
+}
